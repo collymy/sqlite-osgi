@@ -16,15 +16,14 @@ repositories {
 	mavenCentral()
 }
 
-def buddies = ['eu.esdihumboldt.hale.io.jdbc', 'net.sourceforge.schemacrawler' ]
-
 platform {
-	eclipseHome = new File("../eclipse")
+	eclipseHome = new File("/Users/collymyers/Applications/eclipse4.5")
 
 	// add sqlite jdbc driver to the platform configuration
 	bundle(group: 'org.xerial', name: 'sqlite-jdbc', version: '3.8.7') {
 		bnd {
-			instruction 'Bundle-NativeCode',	'native/Linux/amd64/libsqlitejdbc.so; osname=Linux; processor=x86-64,' +
+			instruction 'Bundle-NativeCode',
+								'native/Linux/amd64/libsqlitejdbc.so; osname=Linux; processor=x86-64,' +
 								'native/Linux/i386/libsqlitejdbc.so; osname=Linux; processor=x86,' +
 								'native/Windows/amd64/sqlitejdbc.dll; osname=Win32; processor=x86-64,' +
 								'native/Windows/x86/sqlitejdbc.dll; osname=Win32; processor=x86,' +
@@ -32,20 +31,11 @@ platform {
 								'native/Mac/i386/libsqlitejdbc.jnilib; osname=Mac OS X; processor=x86'
 			instruction 'Export-Package', 'org.sqlite.*;version="3.8.7",!org.sqlite.native.*'
 			instruction 'Import-Package', '!org.ibex.*,javax.sql'
-			
-			if (buddies) {
-				// register buddy
-				instruction 'Eclipse-RegisterBuddy', buddies.join(',')
-				// add as optional required bundle
-				instruction 'Require-Bundle', buddies.collect{
-					it + ';resolution:=optional'
-				}.join(',')
-			}
-			
+
 			addQualifier = true
 		}
 	}
-	
+
 	feature(id: 'platform.shared.sqlite', name: 'SQLite support', version: '3.8.7') {
 		plugin 'org.xerial:sqlite-jdbc:3.8.7'
 	}
